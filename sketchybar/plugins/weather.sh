@@ -3,53 +3,38 @@
 IP=$(curl -s https://ipinfo.io/ip)
 LOCATION_JSON=$(curl -s https://ipinfo.io/$IP/json)
 
-LOCATION="$(echo $LOCATION_JSON | jq '.city' | tr -d '"')"
-REGION="$(echo $LOCATION_JSON | jq '.region' | tr -d '"')"
-COUNTRY="$(echo $LOCATION_JSON | jq '.country' | tr -d '"')"
+LOCATION="$(echo $LOCATION_JSON | jq -r '.city')"
+REGION="$(echo $LOCATION_JSON | jq -r '.region')"
 
-# Line below replaces spaces with +
 LOCATION_ESCAPED="${LOCATION// /+}+${REGION// /+}"
 WEATHER_JSON=$(curl -s "https://wttr.in/$LOCATION_ESCAPED?format=j1")
 
-# Fallback if empty
-if [ -z $WEATHER_JSON ]; then
-
-    sketchybar --set $NAME label=$LOCATION
-    sketchybar --set $NAME.moon icon=
-
-    return
+if [ -z "$WEATHER_JSON" ]; then
+    sketchybar --set $NAME label="$LOCATION"
+    sketchybar --set $NAME icon="" icon.color=0xffffffff
+    exit
 fi
 
-TEMPERATURE=$(echo $WEATHER_JSON | jq '.current_condition[0].temp_C' | tr -d '"')
-WEATHER_DESCRIPTION=$(echo $WEATHER_JSON | jq '.current_condition[0].weatherDesc[0].value' | tr -d '"' | sed 's/\(.\{25\}\).*/\1.../')
-MOON_PHASE=$(echo $WEATHER_JSON | jq '.weather[0].astronomy[0].moon_phase' | tr -d '"')
+WEATHER_DESCRIPTION=$(echo $WEATHER_JSON | jq -r '.current_condition[0].weatherDesc[0].value')
 
-case ${MOON_PHASE} in
-"New Moon")
-    ICON=
-    ;;
-"Waxing Crescent")
-    ICON=
-    ;;
-"First Quarter")
-    ICON=
-    ;;
-"Waxing Gibbous")
-    ICON=
-    ;;
-"Full Moon")
-    ICON=
-    ;;
-"Waning Gibbous")
-    ICON=
-    ;;
-"Last Quarter")
-    ICON=
-    ;;
-"Waning Crescent")
-    ICON=
-    ;;
+# Icon for weather condition
+case "$WEATHER_DESCRIPTION" in
+    *"Sunny"* | *"Clear"*)
+        WEATHER_ICON=""; WEATHER_COLOR=0xffffd700 ;;
+    *"Partly cloudy"*)
+        WEATHER_ICON=""; WEATHER_COLOR=0xffc0c0c0 ;;
+    *"Cloudy"* | *"Overcast"*)
+        WEATHER_ICON=""; WEATHER_COLOR=0xffa9a9a9 ;;
+    *"Rain"* | *"Drizzle"*)
+        WEATHER_ICON=""; WEATHER_COLOR=0xff87ceeb ;;
+    *"Thunder"*)
+        WEATHER_ICON=""; WEATHER_COLOR=0xffffa500 ;;
+    *)
+        WEATHER_ICON=""; WEATHER_COLOR=0xffffffff ;;
 esac
 
-sketchybar --set $NAME label="$LOCATION  $TEMPERATURE℃ $WEATHER_DESCRIPTION"
-sketchybar --set $NAME.moon icon=$ICON
+# Set the weather icon with its color and update label
+sketchybar --set $NAME \
+    icon="$WEATHER_ICON" \
+    icon.color="$WEATHER_COLOR" \
+    label="$WEATHER_DESCRIPTION"

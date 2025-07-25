@@ -101,12 +101,21 @@ sketchybar --add item front_app left \
 
 sketchybar --add item weather q \
     --set weather \
-    icon= \
+    icon="" \
     icon.color=0xfff5bde6 \
     icon.font="$FONT_FACE:Bold:15.0" \
     update_freq=1800 \
     script="$PLUGIN_SHARED_DIR/weather.sh" \
     --subscribe weather system_woke
+
+sketchybar --add item temperature q \
+    --set temperature \
+    icon= \
+    icon.color=0xfff5bde6 \
+    icon.font="$FONT_FACE:Bold:15.0" \
+    update_freq=1800 \
+    script="$PLUGIN_SHARED_DIR/temperature.sh" \
+    --subscribe temperature system_woke
 
 sketchybar --add event spotify_change $SPOTIFY_EVENT \
     --add item spotify e \
