@@ -7,7 +7,7 @@ LOCATION="$(echo $LOCATION_JSON | jq -r '.city')"
 REGION="$(echo $LOCATION_JSON | jq -r '.region')"
 
 LOCATION_ESCAPED="${LOCATION// /+}+${REGION// /+}"
-WEATHER_JSON=$(curl -s "https://wttr.in/$LOCATION_ESCAPED?format=j1")
+WEATHER_JSON=$(curl --http1.0 -A "Mozilla/5.0" "https://wttr.in/$LOCATION_ESCAPED?format=j1")
 
 if [ -z "$WEATHER_JSON" ]; then
     sketchybar --set $NAME label="$LOCATION"
@@ -19,16 +19,20 @@ WEATHER_DESCRIPTION=$(echo $WEATHER_JSON | jq -r '.current_condition[0].weatherD
 
 # Icon for weather condition
 case "$WEATHER_DESCRIPTION" in
-    *"Sunny"* | *"Clear"*)
+    *[Ss]unny* | *[Cc]lear*)
         WEATHER_ICON=""; WEATHER_COLOR=0xffffd700 ;;
-    *"Partly cloudy"*)
+    *[Pp]artly*[Cc]loudy*)
         WEATHER_ICON=""; WEATHER_COLOR=0xffc0c0c0 ;;
-    *"Cloudy"* | *"Overcast"*)
+    *[Cc]loudy* | *[Oo]vercast*)
         WEATHER_ICON=""; WEATHER_COLOR=0xffa9a9a9 ;;
-    *"Rain"* | *"Drizzle"*)
+    *[Rr]ain* | *[Dd]rizzle*)
         WEATHER_ICON=""; WEATHER_COLOR=0xff87ceeb ;;
-    *"Thunder"*)
+    *[Tt]hunder*)
         WEATHER_ICON=""; WEATHER_COLOR=0xffffa500 ;;
+    *[Ss]now*)
+        WEATHER_ICON="❄"; WEATHER_COLOR=0xffadd8e6 ;;
+    *[Ff]og* | *[Mm]ist*)
+        WEATHER_ICON="🌫"; WEATHER_COLOR=0xffcccccc ;;
     *)
         WEATHER_ICON=""; WEATHER_COLOR=0xffffffff ;;
 esac
