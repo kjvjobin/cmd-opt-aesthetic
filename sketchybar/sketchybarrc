@@ -1,7 +1,12 @@
 #!/usr/bin/env zsh
-
 SKETCHYBAR_CONFIG="$HOME/.config/sketchybar"
 
-# Syncing both top and bottom bars
+# Start the bottom_bar process in the background first
+bottom_bar &
+
+# Small delay to ensure bottom_bar is ready
+sleep 0.1
+
+# Load configurations for both bars
 source "$SKETCHYBAR_CONFIG/sketchybarrc-top"
 source "$SKETCHYBAR_CONFIG/sketchybarrc-bottom"
