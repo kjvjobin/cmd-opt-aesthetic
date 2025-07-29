@@ -10,8 +10,8 @@ LOCATION_ESCAPED="${LOCATION// /+}+${REGION// /+}"
 WEATHER_JSON=$(curl --http1.0 -A "Mozilla/5.0" "https://wttr.in/$LOCATION_ESCAPED?format=j1")
 
 if [ -z "$WEATHER_JSON" ]; then
-    sketchybar --set $NAME label="$LOCATION"
-    sketchybar --set $NAME icon="" icon.color=0xffffffff
+    bottom_bar --set $NAME label="$LOCATION"
+    bottom_bar --set $NAME icon="" icon.color=0xffffffff
     exit
 fi
 
@@ -38,7 +38,7 @@ case "$WEATHER_DESCRIPTION" in
 esac
 
 # Set the weather icon with its color and update label
-sketchybar --set $NAME \
+bottom_bar --set $NAME \
     icon="$WEATHER_ICON" \
     icon.color="$WEATHER_COLOR" \
     label="$WEATHER_DESCRIPTION"
