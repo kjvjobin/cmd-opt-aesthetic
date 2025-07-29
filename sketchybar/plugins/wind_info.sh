@@ -12,9 +12,6 @@ WIND_JSON=$(curl --http1.0 -A "Mozilla/5.0" "https://wttr.in/$LOCATION_ESCAPED?f
 WIND_DIRECTION=$(echo $WIND_JSON | jq -r '.current_condition[0].winddir16Point')
 WIND_SPEED=$(echo $WIND_JSON | jq -r '.current_condition[0].windspeedKmph')
 
-echo $WIND_DIRECTION
-echo $WIND_SPEED
-
 # Direction based on WIND_DIRECTION
 case "$WIND_DIRECTION" in
     "N")
@@ -45,8 +42,6 @@ case "$WIND_DIRECTION" in
         WIND_ICON="?"   # Unknown direction
         ;;
 esac
-
-echo $WIND_ICON
 
 # Add wind speed if available
 if [ -n "$WIND_SPEED" ]; then
