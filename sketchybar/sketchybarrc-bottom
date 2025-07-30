@@ -62,5 +62,24 @@ bottom_bar --add item wind left \
     script="$PLUGIN_SHARED_DIR/wind_info.sh" \
     --subscribe wind system_woke
 
+# ── System Details ─────────────────────────────────────────────────────────
+bottom_bar --add item ram right \
+    --set ram \
+    icon="" \
+    icon.color=0xfff5bde6 \
+    icon.font="$FONT_FACE:Bold:12.0" \
+    update_freq=30 \
+    script="$PLUGIN_SHARED_DIR/memory.sh" \
+    --subscribe ram system_woke
+
+bottom_bar --add item cpu right \
+    --set cpu \
+    icon="" \
+    icon.color=0xfff5bde6 \
+    icon.font="$FONT_FACE:Bold:12.0" \
+    update_freq=30 \
+    script="$PLUGIN_SHARED_DIR/cpu.sh" \
+    --subscribe cpu system_woke
+
 # ── Final Update ────────────────────────────────────────────────────
 bottom_bar --update
