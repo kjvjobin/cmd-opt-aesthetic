@@ -10,7 +10,6 @@ HALF_LENGTH=$(((MAX_LENGTH + 1) / 2))
 
 # Spotify JSON / $INFO comes in malformed, line below sanitizes it
 SPOTIFY_JSON="$INFO"
-echo "$SPOTIFY_JSON" > /tmp/spotify_debug.json
 
 update_track() {
 
