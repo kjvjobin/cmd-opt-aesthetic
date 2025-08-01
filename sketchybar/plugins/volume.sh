@@ -22,12 +22,12 @@ if [[ "$SENDER" == "mouse.scrolled" ]]; then
     SCROLL_DELTA=$(cat "$LOCKFILE" 2>/dev/null)
 
     if [[ "$SCROLL_DELTA" -gt 0 ]]; then
-        # Scroll up = increase
-        NEW_VOLUME=$((VOLUME + 10))
+        # Scroll up = decrease
+        NEW_VOLUME=$((VOLUME - 10))
         [[ $NEW_VOLUME -gt 100 ]] && NEW_VOLUME=100
     elif [[ "$SCROLL_DELTA" -lt 0 ]]; then
-        # Scroll down = decrease
-        NEW_VOLUME=$((VOLUME - 10))
+        # Scroll down = increase
+        NEW_VOLUME=$((VOLUME + 10))
         [[ $NEW_VOLUME -lt 0 ]] && NEW_VOLUME=0
     else
         NEW_VOLUME=$VOLUME
