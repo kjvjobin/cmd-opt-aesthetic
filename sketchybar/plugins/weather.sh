@@ -7,7 +7,7 @@ LOCATION="$(echo $LOCATION_JSON | jq -r '.city')"
 REGION="$(echo $LOCATION_JSON | jq -r '.region')"
 
 LOCATION_ESCAPED="${LOCATION// /+}+${REGION// /+}"
-WEATHER_JSON=$(curl --http1.0 -A "Mozilla/5.0" "https://wttr.in/$LOCATION_ESCAPED?format=j1")
+WEATHER_JSON=$(curl -s --http1.0 -A "Mozilla/5.0" "https://wttr.in/$LOCATION_ESCAPED?format=j1")
 
 if [ -z "$WEATHER_JSON" ]; then
     bottom_bar --set $NAME label="$LOCATION"

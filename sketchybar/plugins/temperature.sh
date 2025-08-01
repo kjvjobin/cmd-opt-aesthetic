@@ -7,13 +7,15 @@ LOCATION="$(echo $LOCATION_JSON | jq -r '.city')"
 REGION="$(echo $LOCATION_JSON | jq -r '.region')"
 
 LOCATION_ESCAPED="${LOCATION// /+}+${REGION// /+}"
-TEMP_JSON=$(curl --http1.0 -A "Mozilla/5.0" "https://wttr.in/$LOCATION_ESCAPED?format=j1")
+TEMP_JSON=$(curl -s --http1.0 -A "Mozilla/5.0" "https://wttr.in/$LOCATION_ESCAPED?format=j1")
 
 TEMPERATURE=$(echo $TEMP_JSON | jq -r '.current_condition[0].temp_C')
 
 # Color the thermometer based on temperature
 if [ "$TEMPERATURE" -le 20 ]; then
     THERMO_COLOR=0xff87cefa  # Blue
+elif [ "$TEMPERATURE" -ge 21 ]; then
+    THERMO_COLOR=0xff9fdb37  # Green
 elif [ "$TEMPERATURE" -ge 30 ]; then
     THERMO_COLOR=0xffff4500  # Red
 else

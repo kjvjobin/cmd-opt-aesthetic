@@ -116,10 +116,22 @@ sketchybar --add item wifi right \
 
 sketchybar --add item volume right \
     --set volume \
-    icon.color=0xff8aadf4 \
-    label.drawing=true \
+    icon.color=0xcc1F2331 \
+    label.drawing=false \
     script="$PLUGIN_SHARED_DIR/volume.sh" \
-    --subscribe volume volume_change
+    click_script="$PLUGIN_SHARED_DIR/volume_click.sh" \
+    --subscribe volume volume_change mouse.entered mouse.exited mouse.scrolled \
+    --add slider volume_slider popup.volume \
+    --set volume_slider \
+    slider.width=120 \
+    background.drawing=false \
+    slider.highlight_color=0xcc1F2331 \
+    slider.background.height=6 \
+    slider.background.corner_radius=3 \
+    slider.background.color=0x60ffffff \
+    slider.percentage=50 \
+    script="$PLUGIN_SHARED_DIR/volume_slider.sh" \
+    --subscribe volume_slider volume_change mouse.clicked mouse.entered mouse.exited
 
 # ── Final Update ────────────────────────────────────────────────────
 sketchybar --update
