@@ -1,21 +1,29 @@
 #!/usr/bin/env zsh
 
-# Get current SSID
-CURRENT_NETWORK=$(system_profiler SPAirPortDataType 2>/dev/null | \
-  grep -A 1 "Current Network Information:" | \
-  awk 'NR==2 { gsub(/^[ \t]+/, ""); gsub(/:$/, ""); print }')
+# Check WiFi status
+WIFI_STATUS=$(networksetup -getairportpower en0 | awk '{print $4}')
 
-if [[ -z "$CURRENT_NETWORK" || "$CURRENT_NETWORK" == "None" ]]; then
-  # Not connected
-  ICON="󰖪"  # Disconnected icon
-  LABEL="No-Fi"
-  COLOR="0xfff38ba8"  # Red
+if [[ "$WIFI_STATUS" == "On" ]]; then
+# Get SSID using the system_profiler method that worked in your debug
+SSID=$(system_profiler SPAirPortDataType | grep -A1 "Current Network Information:" | grep -v "Current Network Information" | grep ":" | head -1 | sed 's/^[[:space:]]*//' | sed 's/:.*$//')
+
+if [[ -n "$SSID" ]]; then
+# Connected
+ICON="󰤨"
+COLOR="0xffa6da95" # Green
+LABEL="$SSID"
 else
-  # Connected
-  ICON="󰖩"  # WiFi icon
-  SHORT_NAME="${CURRENT_NETWORK:0:3}_${CURRENT_NETWORK: -2}"
-  LABEL="$SHORT_NAME"
-  COLOR="0xffa6da95"  # Green
+# Not connected
+ICON="󰤮"
+COLOR="0xfff5a97f" # Orange
+LABEL="No WiFi"
+fi
+else
+# WiFi off
+ICON="󰤭"
+COLOR="0xff6e738d" # Gray
+LABEL="Off"
 fi
 
-sketchybar --set wifi icon="$ICON" label="$LABEL" icon.color="$COLOR"
+# Update the WiFi item
+sketchybar --set wifi icon="$ICON" icon.color="$COLOR" label="$LABEL" label.drawing=true
