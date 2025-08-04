@@ -45,7 +45,7 @@ esac
 
 # Add wind speed if available
 if [ -n "$WIND_SPEED" ]; then
-    WIND_LABEL="$WIND_SPEED Kmph"
+    WIND_LABEL="$WIND_SPEED Km/h"
 else
     WIND_LABEL=""
 fi
