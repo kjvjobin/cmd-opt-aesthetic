@@ -11,15 +11,15 @@ TEMP_JSON=$(curl -s --http1.0 -A "Mozilla/5.0" "https://wttr.in/$LOCATION_ESCAPE
 
 TEMPERATURE=$(echo $TEMP_JSON | jq -r '.current_condition[0].temp_C')
 
-# Color the thermometer based on temperature
-if [ "$TEMPERATURE" -le 20 ]; then
-    THERMO_COLOR=0xff87cefa  # Blue
+# Color the thermometer based on temperature (check highest ranges first)
+if [ "$TEMPERATURE" -ge 30 ]; then
+    THERMO_COLOR=0xffff4500  # Red (30°C+)
+elif [ "$TEMPERATURE" -ge 25 ]; then
+    THERMO_COLOR=0xffffd700  # Yellow (25-29°C)
 elif [ "$TEMPERATURE" -ge 21 ]; then
-    THERMO_COLOR=0xff9fdb37  # Green
-elif [ "$TEMPERATURE" -ge 30 ]; then
-    THERMO_COLOR=0xffff4500  # Red
+    THERMO_COLOR=0xff9fdb37  # Green (21-24°C)
 else
-    THERMO_COLOR=0xffffd700  # Yellow
+    THERMO_COLOR=0xff87cefa  # Blue (≤20°C)
 fi
 
 # Set the thermometer icon with its color and update label
